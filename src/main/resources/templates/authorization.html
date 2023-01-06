@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>통합인증페이지</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.0.min.js" ></script>
+
+    <!-- STEP1 -->
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+    <script th:inline="javascript">
+
+      var merchant_uid = [[${merchant_uid}]];
+      var imp_code = [[${imp_code}]];
+
+      //STEP2
+      IMP.init(imp_code);
+
+      function auth(pay_method){
+
+        //STEP3
+        IMP.certification({
+
+          pg: 'inicis_unified',
+          merchant_uid: merchant_uid,
+          m_redirect_url: 'http://localhost:8787/auth/redirect'
+
+        }, function (rsp) { // callback
+          alert('callback 수신: '+JSON.stringify(rsp));
+          //STEP4
+          //벡엔드로 처리
+          jQuery.ajax({
+            url: "/auth/callback",
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            data: JSON.stringify(rsp)
+          }).done(function (data) {
+            // STEP 6
+            alert("콜백처리 수신 및 처리결과 : " + data.status);
+            //콜백에서 처리한 결과를 사용자에게 표시하거나 결제내역 펴이지로 이동할 수 있다.
+          })
+        });
+
+      }
+
+    </script>
+  </head>
+  <body>
+    <div class="center">
+      <div id="normal-pay">
+        <button type="button" class="btn btn-outline-primary" onclick="auth()">통합인증</button>
+      </div>
+    </div>
+  </body>
+</html>
