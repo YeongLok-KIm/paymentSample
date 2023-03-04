@@ -73,10 +73,10 @@ public class OrderController {
 
             //멀티PG 분기(db로 관리 할 수 있다.)
             String[] pg_code = {"html5_inicis", "kcp", "nice", "tosspayments"};
-            int seleted_pg = (int) nano % pg_code.length;
+            long seleted_pg = (long) nano % pg_code.length;
 
             model.addAttribute("imp_code", this.imp_code);
-            model.addAttribute("pg_code", pg_code[seleted_pg]);
+            model.addAttribute("pg_code", pg_code[(int)seleted_pg]);
             model.addAttribute("merchant_uid", merchant_uid);
             model.addAttribute("user", user);
             model.addAttribute("product", product);

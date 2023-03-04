@@ -221,6 +221,8 @@ public class PaymentController {
                         product.update_stock(product.getStock()+1);
                         this.productService.save(product);
                     }
+                    //주문상태 변경
+                    order.update_status("주문성공", "결제성공/가상계좌발급성공");
                     this.orderService.save(order);
 
                 }else{
